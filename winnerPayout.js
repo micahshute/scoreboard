@@ -7,7 +7,7 @@ function User(userName, coinTotal){
 	this.coinTotal = coinTotal;
 }
 
-
+//Initialize Users
 for(var i = 0; i < 10; i++){
 	users.push(new User(`User ${i + 1}`, 0))
 }
@@ -57,22 +57,31 @@ function EarningsEquation(coefficient, order){
 
 //Object used to pay users. Equation used to calculate payment can be set 
 //using the EarningEquation constructor above. 
+
+//IMPORTANT: As of now, the priority is to get everyone at least the minimum payment amount of coins,
+// and then any excess coins are given to the winner. If minimumPay is set to > 0, the only way people
+// will not be paid is if totalCoins runs out. 
+
 var winningsATM = {
 	earningsEquation: new EarningsEquation(1,3),
-	payUsers: function(winnersArray, maxPay = 100, minPay = 1){
+	payUsers: function(winnersArray, totalCoins, minPay = 1){
 		var partitionsSize = 1 / winnersArray.length;
-		var weightCoefficient = 1;
+		sum = 0;
 		for(var i = 0; i < winnersArray.length; i++){
 			var areaUnderCurve = this.earningsEquation.integralEquation().y(1.0 - (partitionsSize * i)) - this.earningsEquation.integralEquation().y(1.0 - (partitionsSize * (i + 1)));
-			if(i == 0){
-				weightCoefficient = maxPay / areaUnderCurve;
-			}
-			var payout = areaUnderCurve * weightCoefficient;
+			var totalArea = this.earningsEquation.integralEquation().y(1.0) - this.earningsEquation.integralEquation().y(0.0);
+			var payout = (areaUnderCurve / totalArea) * totalCoins;
 			var intPayout = roundToInt(payout);
-			if(intPayout < minPay){
+			if((intPayout < minPay) && (sum + intPayout < totalCoins)){
 				intPayout = minPay;
+			}else if(sum + intPayout > totalCoins){
+				intPayout = totalCoins - sum
 			}
+			sum += intPayout;
 			this.conductPayout(winnersArray[i], intPayout);
+		}
+		if(sum < totalCoins){
+			this.conductPayout(winnersArray[0], totalCoins - sum); 
 		}
 	},
 	conductPayout: function(user, amount){
@@ -81,13 +90,17 @@ var winningsATM = {
 }
 
 //*************************************************************************************
+//*************************************************************************************
 //**************************** Code Demonstration *************************************
+//*************************************************************************************
+//*************************************************************************************
 // Using the above functions and objects to perform a sucessful payout
-//Default pay equation -> y = 1*(x^3)
+// Default pay equation -> y = 1*(x^3)
 
-winningsATM.payUsers(users);
+winningsATM.payUsers(users, 1000);
 
 //Test the payment
+console.log("Command: winningsATM.payUsers(users, 1000)");
 for(var i = 0; i < users.length; i++){
 	console.log(`${users[i].userName} payment: ${users[i].coinTotal}`);
 }
@@ -101,13 +114,24 @@ for(var i = 0; i < 10; i++){
 
 
 //Pay again with custom set max and minimum values
-winningsATM.payUsers(users, 70, 5);
+winningsATM.payUsers(users, 10, 1);
 
 //test the payment
-
+console.log("Command: winningsATM.payUsers(users, 10, 1)");
 for(var i = 0; i < users.length; i++){
 	console.log(`${users[i].userName} payment: ${users[i].coinTotal}`);
 }
+console.log("Test complete");
+
+//Pay again with custom set max and minimum values
+winningsATM.payUsers(users, 10, 0);
+
+//test the payment
+console.log("Command: winningsATM.payUsers(users, 10, 0)");
+for(var i = 0; i < users.length; i++){
+	console.log(`${users[i].userName} payment: ${users[i].coinTotal}`);
+}
+console.log("Winner index 0 makes more money in this test than the previous one because the excess coins from the total are dumped to the winner. Since a minimum amount to be paid wasn't set, there were excess coins")
 console.log("Test complete");
 
 
@@ -123,9 +147,10 @@ for(var i = 0; i < 10; i++){
 }
 
 //pay users with new earnings equation
-winningsATM.payUsers(users);
+winningsATM.payUsers(users, 1000);
 
 //test payment
+console.log("Command: winningsATM.payUsers(users, 1000)");
 for(var i = 0; i < users.length; i++){
 	console.log(`${users[i].userName} payment: ${users[i].coinTotal}`);
 }
