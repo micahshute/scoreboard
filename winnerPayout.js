@@ -85,10 +85,51 @@ var winningsATM = {
 //Using the above functions and objects to perform a sucessful payout
 
 winningsATM.payUsers(users);
-winningsATM.payUsers(users, 50,10);
+
+//test the payment
+for(var i = 0; i < users.length; i++){
+	console.log(users[i].coinTotal);
+}
+console.log("Test complete");
+
+//reset users array
+users = [];
+for(var i = 0; i < 10; i++){
+	users.push(new User(`User ${i + 1}`, 0));
+}
+
+
+//Pay again with custom set max and minimum values
+winningsATM.payUsers(users, 70, 5);
 
 //test the payment
 
 for(var i = 0; i < users.length; i++){
 	console.log(users[i].coinTotal);
 }
+console.log("Test complete");
+//Change the equation from 1*(x^3) to 3*(x^2)
+//NOTE: may be better to add a getter/setter for earningsEquation and integralEquation in order to 
+//resetboth with the same command. Will look into it/
+
+
+winningsATM.earningsEquation = new EarningsEquation(3,2);
+winningsATM.integralEquation = winningsATM.earningsEquation.integralEquation();
+
+//reset users array
+
+users = [];
+
+for(var i = 0; i < 10; i++){
+	users.push(new User(`User ${i + 1}`, 0));
+}
+
+//pay users with new earnings equation
+winningsATM.payUsers(users);
+
+//test payment
+for(var i = 0; i < users.length; i++){
+	console.log(users[i].coinTotal);
+}
+console.log("Test complete");
+
