@@ -80,6 +80,7 @@ var winningsATM = {
 			sum += intPayout;
 			this.conductPayout(winnersArray[i], intPayout);
 		}
+		//give excess coins to the winner
 		if(sum < totalCoins){
 			this.conductPayout(winnersArray[0], totalCoins - sum); 
 		}
