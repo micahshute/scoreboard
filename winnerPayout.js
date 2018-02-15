@@ -88,6 +88,7 @@ var winningsATM = {
 //Using the above functions and objects to perform a sucessful payout
 
 winningsATM.payUsers(users);
+winningsATM.payUsers(users, 50,10);
 
 //test the payment
 
