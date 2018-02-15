@@ -76,17 +76,13 @@ var winningsATM = {
 				intPayout = minPay;
 			}else if(sum + intPayout > totalCoins){
 				intPayout = totalCoins - sum;
-				console.log(`readjusted payout: ${intPayout}`)
 			}
-			console.log(`intPayout ${intPayout}`);
 			sum += intPayout;
-			console.log(`Sum ${sum}`)
 			this.conductPayout(winnersArray[i], intPayout);
 		}
 		//give excess coins to the winner
 		if(sum < totalCoins){
 			this.conductPayout(winnersArray[0], totalCoins - sum); 
-			console.log(`Total paid: ${(sum + (totalCoins - sum))}`)
 		}
 	},
 	conductPayout: function(user, amount){
@@ -169,7 +165,7 @@ console.log("Test complete");
 
 //Change the equation from 1*(x^3) to 3*(x^2)
 winningsATM.earningsEquation = new EarningsEquation(3,2);
-
+console.log("Equation changed to y=3x^2")
 //reset users array
 
 users = [];
