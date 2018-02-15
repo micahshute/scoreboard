@@ -73,7 +73,6 @@ var winningsATM = {
 			}
 			var payout = areaUnderCurve * weightCoefficient;
 			var intPayout = roundToInt(payout);
-			console.log(intPayout);
 			if(intPayout < minPay){
 				intPayout = minPay;
 			}
@@ -81,7 +80,7 @@ var winningsATM = {
 		}
 	},
 	conductPayout: function(user, amount){
-		user.cointTotal = user.cointTotal + amount;
+		user.coinTotal = user.coinTotal + amount;
 	}
 }
 
