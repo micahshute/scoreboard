@@ -54,9 +54,6 @@ function EarningsEquation(coefficient, order){
 
 }
 
-// function IntegralEquation(equation){
-// 	return EarningsEquation(equation.coefficient / (equation.order + 1), equation.order + 1)
-// }
 
 //Object used to pay users. Equation used to calculate payment can be set 
 //using the EarningEquation constructor above. 
