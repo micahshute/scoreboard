@@ -66,23 +66,27 @@ var winningsATM = {
 	earningsEquation: new EarningsEquation(1,3),
 	payUsers: function(winnersArray, totalCoins, minPay = 1){
 		var partitionsSize = 1 / winnersArray.length;
-		sum = 0;
+		var sum = 0;
 		for(var i = 0; i < winnersArray.length; i++){
 			var areaUnderCurve = this.earningsEquation.integralEquation().y(1.0 - (partitionsSize * i)) - this.earningsEquation.integralEquation().y(1.0 - (partitionsSize * (i + 1)));
 			var totalArea = this.earningsEquation.integralEquation().y(1.0) - this.earningsEquation.integralEquation().y(0.0);
 			var payout = (areaUnderCurve / totalArea) * totalCoins;
 			var intPayout = roundToInt(payout);
-			if((intPayout < minPay) && (sum + intPayout < totalCoins)){
+			if((intPayout < minPay) && (sum + minPay < totalCoins)){
 				intPayout = minPay;
 			}else if(sum + intPayout > totalCoins){
-				intPayout = totalCoins - sum
+				intPayout = totalCoins - sum;
+				console.log(`readjusted payout: ${intPayout}`)
 			}
+			console.log(`intPayout ${intPayout}`);
 			sum += intPayout;
+			console.log(`Sum ${sum}`)
 			this.conductPayout(winnersArray[i], intPayout);
 		}
 		//give excess coins to the winner
 		if(sum < totalCoins){
 			this.conductPayout(winnersArray[0], totalCoins - sum); 
+			console.log(`Total paid: ${(sum + (totalCoins - sum))}`)
 		}
 	},
 	conductPayout: function(user, amount){
@@ -124,6 +128,15 @@ for(var i = 0; i < users.length; i++){
 }
 console.log("Test complete");
 
+
+//reset users array
+
+users = [];
+
+for(var i = 0; i < 10; i++){
+	users.push(new User(`User ${i + 1}`, 0));
+}
+
 //Pay again with custom set max and minimum values
 winningsATM.payUsers(users, 10, 0);
 
@@ -132,8 +145,26 @@ console.log("Command: winningsATM.payUsers(users, 10, 0)");
 for(var i = 0; i < users.length; i++){
 	console.log(`${users[i].userName} payment: ${users[i].coinTotal}`);
 }
-console.log("Winner index 0 makes more money in this test than the previous one because the excess coins from the total are dumped to the winner. Since a minimum amount to be paid wasn't set, there were excess coins")
 console.log("Test complete");
+
+//reset users array
+
+users = [];
+
+for(var i = 0; i < 10; i++){
+	users.push(new User(`User ${i + 1}`, 0));
+}
+
+//Pay again with custom set max and minimum values
+winningsATM.payUsers(users, 10000, 0);
+
+//test the payment
+console.log("Command: winningsATM.payUsers(users, 10000, 0)");
+for(var i = 0; i < users.length; i++){
+	console.log(`${users[i].userName} payment: ${users[i].coinTotal}`);
+}
+console.log("Test complete");
+
 
 
 //Change the equation from 1*(x^3) to 3*(x^2)
