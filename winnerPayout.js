@@ -100,6 +100,7 @@ var winningsATM = {
 
 winningsATM.payUsers(users, 1000);
 
+
 //Test the payment
 console.log("Command: winningsATM.payUsers(users, 1000)");
 for(var i = 0; i < users.length; i++){
