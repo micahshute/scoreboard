@@ -64,7 +64,7 @@ function EarningsEquation(coefficient, order){
 
 var winningsATM = {
 	earningsEquation: new EarningsEquation(1,3),
-	payUsers: function(winnersArray, totalCoins, minPay = 1){
+	payUsers: function(winnersArray, totalCoins, minPay = 0){
 		var partitionsSize = 1 / winnersArray.length;
 		var sum = 0;
 		for(var i = 0; i < winnersArray.length; i++){
@@ -165,8 +165,16 @@ console.log("Test complete");
 
 
 //Change the equation from 1*(x^3) to 3*(x^2)
+
+
+
+
 winningsATM.earningsEquation = new EarningsEquation(3,2);
 console.log("Equation changed to y=3x^2")
+
+
+
+
 //reset users array
 
 users = [];
@@ -176,6 +184,7 @@ for(var i = 0; i < 10; i++){
 }
 
 //pay users with new earnings equation
+
 winningsATM.payUsers(users, 1000);
 
 //test payment
